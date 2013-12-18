@@ -16,11 +16,11 @@ my $build = Alien::Base::ModuleBuild->new(
         'Module::Build' => 0,
         'Alien::Base' => 0,
         'Alien::Base::ModuleBuild' => 0,
+        'Software::License' => 0,
     },
     build_requires => {
         'Alien::Base::ModuleBuild' => 0,
         'Test::More' => 0,
-        'Data::Dumper' => 0,
     },
     requires => {
         'perl' => '5.10.0',
@@ -55,7 +55,6 @@ my $build = Alien::Base::ModuleBuild->new(
 );
 
 $build->create_build_script;
-$build->dispatch('clean');
 $build->dispatch('distmeta');
 $build->dispatch('manifest');
 
