@@ -33,6 +33,8 @@ my $build = Alien::Base::ModuleBuild->new(
         location => '/ta-lib/',
         exact_filename => 'ta-lib-0.4.0-src.tar.gz',
         exact_version => '0.4.0',
+        sha1 => 'b326b91e79ca1e569e95aad91e87a38640dd5f1b',
+        sha256 => '9ff41efcb1c011a4b4b6dfc91610b06e39b1d7973ed5d4dee55029a0ac4dc651',
     },
     alien_build_commands => [
         '%pconfigure --prefix=%s',
