@@ -1,4 +1,9 @@
-Alien-TALib
-===========
+# Alien-TALib
 
-Alien::TALib Module for handling dependency management for TA-lib from http://ta-lib.org
+Copyright: 2013, Vikas N Kumar <vikas@cpan.org>. All Rights Reserved.
+
+## TA-lib
+
+Alien::TALib is a module for handling the dependency of `ta-lib` from
+<http://ta-lib.org>. The current version supported is `0.4.0`.
+
