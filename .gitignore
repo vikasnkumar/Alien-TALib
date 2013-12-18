@@ -21,3 +21,6 @@ TAGS
 todo
 TODO
 *.bak
+_alien
+_share
+_installer

@@ -2,9 +2,13 @@ package Alien::TALib;
 use strict;
 use warnings;
 
-BEGIN {
-    our $VERSION = 0.01;
-}
+our $VERSION = '0.01';
+$VERSION = eval $VERSION;
+
+use parent 'Alien::Base';
+
+
+1;
 
 __END__
 #### COPYRIGHT: Vikas N Kumar. All Rights Reserved

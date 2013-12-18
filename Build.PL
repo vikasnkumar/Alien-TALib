@@ -1,7 +1,9 @@
 use strict;
 use warnings;
-use Module::Build;
 use Alien::Base::ModuleBuild;
+
+$Alien::Base::ModuleBuild::Verbose = 1;
+$Alien::Base::ModuleBuild::Force = 1;
 
 my $build = Alien::Base::ModuleBuild->new(
     module_name => 'Alien::TALib',
@@ -12,6 +14,7 @@ my $build = Alien::Base::ModuleBuild->new(
     create_license => 1,
     configure_requires => {
         'Module::Build' => 0,
+        'Alien::Base' => 0,
         'Alien::Base::ModuleBuild' => 0,
     },
     build_requires => {
@@ -22,8 +25,25 @@ my $build = Alien::Base::ModuleBuild->new(
     requires => {
         'perl' => '5.10.0',
         'Alien::Base' => 0,
-        'Carp' => 0,
     },
+    alien_name => 'ta_lib',
+    alien_repository => {
+        protocol => 'http',
+        host => 'prdownloads.sourceforge.net',
+        location => '/ta-lib/',
+        exact_filename => 'ta-lib-0.4.0-src.tar.gz',
+        exact_version => '0.4.0',
+    },
+    alien_build_commands => [
+        '%pconfigure --prefix=%s',
+        'make',
+        'make check'
+    ],
+    alien_install_commands => [
+        'make install'
+    ],
+    alien_provides_cflags => "-DHAVE_CONFIG_H",
+    alien_provides_libs => "-lpthread -ldl -lta_lib",
 );
 
 $build->create_build_script;
