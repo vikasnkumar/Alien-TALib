@@ -21,6 +21,8 @@ my $build = Alien::Base::ModuleBuild->new(
     build_requires => {
         'Alien::Base::ModuleBuild' => 0,
         'Test::More' => 0,
+        'Module::Build' => 0,
+        'Software::License' => 0,
     },
     requires => {
         'perl' => '5.10.0',
