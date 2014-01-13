@@ -87,5 +87,7 @@ L<https://github.com/vikasnkumar/Alien-TALib.git>
 
 Copyright (C) 2013-2014. Vikas N Kumar <vikas@cpan.org>. All Rights Reserved.
 
+=head1 LICENSE
+
 This is free software. YOu can redistribute it or modify it under the terms of
 Perl itself.

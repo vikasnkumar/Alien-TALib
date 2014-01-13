@@ -1,0 +1,11 @@
+52611b5efd57f7daef8264bb3e290139709658ca - Adding documentation to the library - Updating version
+6bc134c486aa7b9ddb3ae095cb8882c804802110 Updating the version.
+353e459aa5ec946d52fc719b5263ee75bc7ab7f4 Adding a basic unit test so that cpan-testers shows that Alien::TALib is supported across various systems
+4f7dc3b904deb05776991e631892f432493661f5 Adding license generation to the build_requires
+c9af2b7904bbecd45910141dc35b2dc7bb1f58c6 Updating to manage dependencies for license creation.
+ff783d6f6c1c5ca4c0d9980e15a85ba668b8eab2 Adding meta-resources for CPAN
+866e76a0404670c34b1ae0d2849a787915f2a793 Adding SHA-1/256 sums to the mix.
+83c3cccb2893a08b22802c22f635840ed1da4c89 README update
+34479d38123758ba18fe3154ca2b68d3221d181f Updating code to handle the ta-lib-0.4.0
+f55b20ac54ca3807953b83d8645e2ae359c9f3b7 Adding a dummy build system
+e2391b5ecac4ea5722f3a421b306c58d50068501 Initial commit
