@@ -2,7 +2,7 @@ package Alien::TALib;
 use strict;
 use warnings;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 $VERSION = eval $VERSION;
 
 use parent 'Alien::Base';
@@ -40,7 +40,7 @@ C<Makefile.PL> file if you're using ExtUtils::MakeMaker.
 
 =head1 VERSION
 
-0.03
+0.04
 
 =head1 WARNING
 
