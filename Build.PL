@@ -48,6 +48,7 @@ my $build = Alien::Base::ModuleBuild->new(
     ],
     alien_provides_cflags => "-DHAVE_CONFIG_H",
     alien_provides_libs => "-lpthread -ldl -lta_lib",
+    alien_version_check => "ta-lib-config --version",
     meta_merge => {
         resources => {
             repository => "https://github.com/vikasnkumar/Alien-TALib",
