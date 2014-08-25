@@ -3,34 +3,56 @@ use warnings;
 use Module::Build;
 use File::Spec;
 use File::Which qw(which);
+use File::HomeDir;
+use File::Path qw(remove_tree);
 use LWP::Simple qw(getstore is_success);
 use Archive::Tar;
-use Archive::Zip;
+use Archive::Zip qw(:ERROR_CODES :CONSTANTS);
 use Cwd ();
 
 my $VERBOSE = 0;
 
 sub _build_talib_src_win32 {
+    my $force = shift;
     my $src_url = 'http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip';
-    my $dest = 'ta-lib-0.4.0-mscv.zip';
-    unless (-e $dest and -e 'ta-lib') {
-        print "Trying to download $dest from $src_url\n" if $VERBOSE;
-        my $rc = getstore($src_url, $dest);
-        die "Unable to download source from $src_url into $dest" unless is_success($rc);
-        if (Archive::Tar->has_zlib_support) {
-            my $files = Archive::Tar->extract_archive($dest, COMPRESS_GZIP);
-            die "Unable to extract source code in $dest ", Archive::Tar->error unless $files;
-            die "Cannot find ta-lib/ directory" unless -d 'ta-lib';
-        } else {
-            die "No gzip/zlib support enabled in Archive::Tar. Cannot extract $dest";
-        }
-    } else {
-        print "$dest already exists and is unarchived in ta-lib\n" if $VERBOSE;
+    my $datadir = $ENV{PREFIX} || File::HomeDir->my_dist_data('Alien::TALib', { create => 1 });
+    my $destzip = File::Spec->catfile($datadir, 'ta-lib-0.4.0-mscv.zip');
+    my $destdir = File::Spec->catfile($datadir, 'ta-lib');
+    if ($force) {
+        unlink $destzip if -e $destzip;
+        remove_tree ($destdir, {safe => 1 });
     }
+    unless (-e $destzip and -e $destdir) {
+        print "Trying to download into $destzip from $src_url\n" if $VERBOSE;
+        my $rc = getstore($src_url, $destzip);
+        die "Unable to download source from $src_url into $destzip" unless is_success($rc);
+        my $cwd = Cwd::getcwd;
+        chdir $datadir;
+        my $zip = Archive::Zip->new;
+        if ($zip->read($destzip) == AZ_OK) {
+            $zip->extractTree();
+            die "Unable to successfully extract $destzip into ta-lib" unless -e $destdir;
+        } else {
+            die "Unable to read the zip file: $destzip";
+        }
+        chdir $cwd;
+    } else {
+        print "$destzip already exists and is unarchived in ta-lib\n" if $VERBOSE;
+    }
+    # ok we have extracted nicely and let's use the pre-built libs
+    my $lib_dir = File::Spec->catdir($destdir, 'c', 'lib');
+    my $libs = "-L$lib_dir -lta_abstract_cmr -lta_common_cmr -lta_func_cmr -lta_libc_cmr";
+    my $inc_dir = File::Spec->catdir($destdir, 'c', 'include');
+    my $cflags = "-I$inc_dir";
+    return {
+        cflags => $cflags,
+        libs => $libs,
+        installed => 1,
+    };
 }
 
 sub _build_talib_src_unix {
-    my $prefix = shift || $ENV{PREFIX};
+    my $prefix = shift || $ENV{PREFIX} || File::HomeDir->my_dist_data('Alien::TALib', { create => 1 });
     my $src_url = 'http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz';
     my $dest = 'ta-lib-0.4.0-src.tar.gz';
     unless (-e $dest and -e 'ta-lib') {
@@ -144,6 +166,8 @@ my $build = Module::Build->new(
         'Software::License' => 0,
         'File::Spec' => 0,
         'File::Which' => 0,
+        'File::HomeDir' => 0,
+        'File::Path' => 0,
         'LWP::Simple' => 0,
         'Archive::Tar' => 0,
         'Archive::Zip' => 0,
@@ -153,8 +177,10 @@ my $build = Module::Build->new(
         'Module::Build' => 0,
         'Test::More' => 0,
         'Software::License' => 0,
+        'File::HomeDir' => 0,
         'File::Spec' => 0,
         'File::Which' => 0,
+        'File::Path' => 0,
         'LWP::Simple' => 0,
         'Archive::Tar' => 0,
         'Archive::Zip' => 0,
@@ -163,6 +189,7 @@ my $build = Module::Build->new(
     requires => {
         'File::Spec' => 0,
         'File::Which' => 0,
+        'File::HomeDir' => 0,
         'LWP::Simple' => 0,
         'Archive::Tar' => 0,
         'Archive::Zip' => 0,
@@ -176,16 +203,18 @@ my $build = Module::Build->new(
     },
 );
 $VERBOSE = $build->verbose;
-my $installed = &_find_ta_lib_config();
-if ($ENV{TALIB_FORCE} or not $installed) {
-    # ok ta-lib was not found or build was forced
-    # so build it
-    if ($^O =~ /Win32/i) {
-        $installed = &_build_talib_src_win32();
-    } else {
+my $installed;
+if ($^O =~ /Win32/i) {
+    $installed = &_build_talib_src_win32($ENV{TALIB_FORCE});
+} else {
+    $installed = &_find_ta_lib_config();
+    if ($ENV{TALIB_FORCE} or not $installed) {
+        # ok ta-lib was not found or build was forced
+        # so build it
         # cygwin/linux/bsd/darwin
-        my $prefix = $ENV{PREFIX} || $build->install_destination('bin');
+        my $prefix = $build->install_destination('bin');
         $prefix =~ s/bin\/?$//g if defined $prefix; # remove the bin
+        $prefix = $ENV{PREFIX} || $build->prefix() || $prefix;
         my $taconf = &_build_talib_src_unix($prefix);
         $installed = &_find_ta_lib_config($taconf, $prefix);
     }
@@ -195,9 +224,6 @@ die "Unable to find ta-lib or install it" unless $installed;
 foreach (keys %$installed) {
     $build->config_data($_ => $installed->{$_});
 }
-#my $pref = $build->install_destination('bin');
-#$pref =~ s/bin\/?$//g; # remove the bin. Maybe use File::Basename
-#$build->config_data(prefix => $ENV{PREFIX} || $build->prefix() || $pref);
 $build->create_build_script;
 $build->dispatch('distmeta');
 $build->dispatch('manifest');
