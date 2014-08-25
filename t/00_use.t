@@ -9,6 +9,8 @@ note($alien->cflags);
 can_ok($alien, 'libs');
 isnt($alien->libs, undef, "has libs()");
 note($alien->libs);
+can_ok($alien, 'installed');
+can_ok($alien, 'ta_lib_config');
 
 done_testing();
 __END__

@@ -1,11 +1,87 @@
 package Alien::TALib;
 use strict;
 use warnings;
+use File::Which 'which';
+use File::Spec;
 
 our $VERSION = '0.04';
 $VERSION = eval $VERSION;
 
-use parent 'Alien::Base';
+our $VERBOSE = 0;
+
+sub _find_ta_lib_config {
+    my $cflags = $ENV{TALIB_CFLAGS};
+    my $libs = $ENV{TALIB_LIBS};
+    if (defined $cflags and defined $libs) {
+        return {
+            cflags => $cflags,
+            libs => $libs,
+        };
+    }
+    my ($talibconfig) = which('ta-lib-config');
+
+    my $inc_dir = '';
+    my $lib_dir = '';
+    if (defined $talibconfig) {
+        # usually the ta-lib-config is in the path format /abc/bin/ta-lib-config
+        my ($vol, $dir, $file) = File::Spec->splitpath($talibconfig);
+        my @dirs = File::Spec->splitdir($dir);
+        pop @dirs if @dirs; # remove the bin/ portion from the path
+        # create the include directory and lib directory path
+        # to take care of ta-lib-config's malformed output
+        # the user may have installed ta-lib-config in a non /usr/local area.
+        $inc_dir = File::Spec->catdir(@dirs, 'include', 'ta-lib') if @dirs;
+        $lib_dir = File::Spec->catdir(@dirs, 'lib') if @dirs;
+        $inc_dir = File::Spec->catfile($vol, $inc_dir) if $inc_dir;
+        $lib_dir = File::Spec->catfile($vol, $lib_dir) if $lib_dir;
+        $inc_dir = File::Spec->canonpath($inc_dir);
+        $lib_dir = File::Spec->canonpath($lib_dir);
+        if (not defined $libs) {
+            $libs = `$talibconfig --libs`;
+            chomp $libs if length $libs;
+            $libs =~ s/[\s\n\r]*$// if length $libs;
+            $libs .= " -lta_lib" if length $libs && $libs !~ /-lta_lib/;
+            # fix the problem with ta-lib-config --libs giving the wrong -L path
+            $libs = "-L$lib_dir $libs" if $lib_dir;
+        }
+        if (not defined $cflags) {
+            $cflags = `$talibconfig --cflags`;
+            chomp $cflags if length $cflags;
+            $cflags =~ s/[\s\n\r]*$// if length $cflags;
+            $cflags = "-I$inc_dir $cflags" if $inc_dir;
+        }
+    }
+    return unless (defined $cflags and defined $libs);
+    #$cflags = " -DHAVE_CONFIG_H";
+    #$libs = "-lpthread -ldl -lta_lib";
+    if ($VERBOSE) {
+        print "Expected ta-lib cflags: $cflags\n" if defined $cflags;
+        print "Expected ta-lib libs: $libs\n" if defined $libs;
+    }
+    return {
+        cflags => $cflags,
+        libs => $libs,
+        talibconfig => $talibconfig,
+    };
+}
+
+sub new {
+    my $class = shift || __PACKAGE__;
+    my $obj = {};
+    my $installed = &_find_ta_lib_config();
+    if ($installed) {
+        $obj->{installed} = 1;
+        foreach (keys %$installed) {
+            $obj->{$_} = $installed->{$_};
+        }
+    }
+    return bless($obj, $class);
+}
+
+sub cflags { return shift->{cflags}; }
+sub libs { return shift->{libs}; }
+sub installed { return shift->{installed}; }
+sub ta_lib_config { return shift->{talibconfig}; }
 
 1;
 
