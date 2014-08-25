@@ -24,6 +24,8 @@ if (defined $talibconfig) {
     $lib_dir = File::Spec->catdir(@dirs, 'lib') if @dirs;
     $inc_dir = File::Spec->catfile($vol, $inc_dir) if $inc_dir;
     $lib_dir = File::Spec->catfile($vol, $lib_dir) if $lib_dir;
+    $inc_dir = File::Spec->canonpath($inc_dir);
+    $lib_dir = File::Spec->canonpath($lib_dir);
     if (not defined $libs) {
         $libs = `$talibconfig --libs`;
         chomp $libs if length $libs;
@@ -47,6 +49,8 @@ if (defined $cflags and defined $libs) {
     $cflags = " -DHAVE_CONFIG_H";
     $libs = "-lpthread -ldl -lta_lib";
 }
+print "Expected ta-lib cflags: $cflags\n";
+print "Expected ta-lib libs: $libs\n";
 
 my $build = Alien::Base::ModuleBuild->new(
     module_name => 'Alien::TALib',
