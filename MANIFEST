@@ -5,5 +5,5 @@ LICENSE
 MANIFEST			This list of files
 META.json
 META.yml
-README.md
+README
 t/00_use.t

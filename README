@@ -1,0 +1,103 @@
+NAME
+    Alien::TALib
+
+SYNOPSIS
+    Alien::TALib is a perl module that enables the installation of the
+    technical analysis library TA-lib from "http://ta-lib.org" on the system
+    and easy access by other perl modules in the methodology cited by
+    Alien::Base.
+
+    You can use it in the `Build.PL' file if you're using Module::Build or
+    `Makefile.PL' file if you're using ExtUtils::MakeMaker.
+
+                my $talib = Alien::TALib->new;
+
+                my $build = Module::Build->new(
+                    ...
+                    extra_compiler_flags => $talib->cflags(),
+                    extra_linker_flags => $talib->libs(),
+                    ...
+                );
+
+VERSION
+    0.05
+
+DESCRIPTION
+    Installing ta-lib on various platforms can be a hassle for the end-user.
+    Hence the modules like Finance::Talib and PDL::Finance::Talib may choose
+    to use Alien::TALib for automatically checking and verifying that there
+    are already existing installs of ta-lib on the system and if not,
+    installing the ta-lib libraries on the system.
+
+METHODS
+    new This method finds an already installed ta-lib or can install it if
+        not found or if the install is forced by setting the
+        $Alien::TALib::FORCE variable to 1. The user can set TALIB_CFLAGS at
+        runtime to override the cflags output of the object created with
+        this function. The user can also set TALIB_LIBS at runtime to
+        override the libs output of the object created with this function.
+
+    cflags
+        This method provides the compiler flags needed to use the library on
+        the system.
+
+    libs
+        This method provides the linker flags needed to use the library on
+        the system.
+
+    talibconfig
+        This method returns the path of the ta-lib-config executable if it
+        has been installed.
+
+    is_installed
+        This method returns a boolean saying whether ta-lib has been
+        installed or not.
+
+    config
+        This method provides the access to configuration information for the
+        library on the system. More information can be seen in the module
+        Alien::TALib::ConfigData.
+
+SPECIAL VARIABLES
+    $Alien::TALib::VERBOSE
+        Setting this value to 1 will turn on some verbose statements to help
+        the user debug the problems they are facing in using this module.
+
+    $Alien::TALib::FORCE
+        Setting this value to 1 before calling the new() method will force
+        the download and install of the ta-lib library.
+
+    $ENV{TALIB_CFLAGS} and $ENV{TALIB_LIBS}
+        Setting these environment variables will force Alien::TALib to use
+        the values that these provide as part of the new() object's methods
+        like cflags() and libs().
+
+    $ENV{PREFIX}
+        Setting this environment variable before running Build.PL will
+        configure Alien::TALib::ConfigData to use this value as the install
+        prefix of ta-lib if it is built and installed.
+
+        Setting this environment variable before calling the new() method
+        will use this as a place to look for ta-lib-config if it has been
+        installed or will install ta-lib if needed with this location as
+        prefix.
+
+SEE ALSO
+    `Alien::TALib::ConfigData'
+    `PDL::Finance::Talib'
+    `Finance::Talib'
+
+AUTHORS
+    Vikas N Kumar <vikas@cpan.org>
+
+REPOSITORY
+    https://github.com/vikasnkumar/Alien-TALib.git
+
+COPYRIGHT
+    Copyright (C) 2013-2014. Vikas N Kumar <vikas@cpan.org>. All Rights
+    Reserved.
+
+LICENSE
+    This is free software. YOu can redistribute it or modify it under the
+    terms of Perl itself.
+

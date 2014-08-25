@@ -78,4 +78,7 @@
 \b_alien
 \b_share
 \b_installer
-
+.swp$
+ta-lib/
+.gz$
+.zip$

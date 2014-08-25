@@ -25,3 +25,6 @@ _alien
 _share
 _installer
 *.tar.gz
+*.zip
+.*.swp
+ta-lib

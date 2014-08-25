@@ -7,8 +7,9 @@ my $build = Module::Build->new(
     license => 'perl',
     dist_author => 'Vikas N. Kumar <vikas@cpan.org>',
     dist_abstract => 'Alien module for ta-lib from http://ta-lib.org',
-    create_readme => 0,
+    create_readme => 1,
     create_license => (-e 'LICENSE' ? 0 : 1),
+    needs_compiler => 1,
     configure_requires => {
         'Module::Build' => 0,
         'Software::License' => 0,
@@ -21,26 +22,11 @@ my $build = Module::Build->new(
     requires => {
         'File::Spec' => 0,
         'File::Which' => 0,
+        'LWP::Simple' => 0,
+        'Archive::Tar' => 0,
+        'Archive::Zip' => 0,
+        'Cwd' => 0,
     },
-    alien_name => 'ta_lib',
-    alien_repository => {
-        protocol => 'http',
-        host => 'prdownloads.sourceforge.net',
-        location => '/ta-lib/',
-        exact_filename => 'ta-lib-0.4.0-src.tar.gz',
-        exact_version => '0.4.0',
-        sha1 => 'b326b91e79ca1e569e95aad91e87a38640dd5f1b',
-        sha256 => '9ff41efcb1c011a4b4b6dfc91610b06e39b1d7973ed5d4dee55029a0ac4dc651',
-    },
-    alien_build_commands => [
-        '%pconfigure --prefix=%s',
-        'make',
-        'make check'
-    ],
-    alien_install_commands => [
-        'make install'
-    ],
-    alien_version_check => "ta-lib-config --version",
     meta_merge => {
         resources => {
             repository => "https://github.com/vikasnkumar/Alien-TALib",
@@ -48,7 +34,9 @@ my $build = Module::Build->new(
         },
     },
 );
-
+my $pref = $build->install_destination('bin');
+$pref =~ s/bin\/?$//g; # remove the bin. Maybe use File::Basename
+$build->config_data(prefix => $ENV{PREFIX} || $build->prefix() || $pref);
 $build->create_build_script;
 $build->dispatch('distmeta');
 $build->dispatch('manifest');
