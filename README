@@ -11,6 +11,7 @@ SYNOPSIS
     `Makefile.PL' file if you're using ExtUtils::MakeMaker.
 
                 my $talib = Alien::TALib->new;
+                die "ta-lib is not installed" unless $talib->is_installed;
 
                 my $build = Module::Build->new(
                     ...
@@ -45,7 +46,7 @@ METHODS
         This method provides the linker flags needed to use the library on
         the system.
 
-    talibconfig
+    ta_lib_config
         This method returns the path of the ta-lib-config executable if it
         has been installed.
 
@@ -58,29 +59,21 @@ METHODS
         library on the system. More information can be seen in the module
         Alien::TALib::ConfigData.
 
-SPECIAL VARIABLES
-    $Alien::TALib::VERBOSE
-        Setting this value to 1 will turn on some verbose statements to help
-        the user debug the problems they are facing in using this module.
-
-    $Alien::TALib::FORCE
-        Setting this value to 1 before calling the new() method will force
-        the download and install of the ta-lib library.
+SPECIAL BUILD TIME VARIABLES
+    $ENV{TALIB_FORCE}
+        Setting this value to 1 before running Build.PL will force the
+        download and re-install of the ta-lib library.
 
     $ENV{TALIB_CFLAGS} and $ENV{TALIB_LIBS}
-        Setting these environment variables will force Alien::TALib to use
-        the values that these provide as part of the new() object's methods
-        like cflags() and libs().
+        Setting these environment variables before running Build.PL will
+        force these values to be used to provide the output of cflags() and
+        libs() functions. In this case is_installed() will always return 1
+        and ta_lib_config() will always return undefined.
 
     $ENV{PREFIX}
         Setting this environment variable before running Build.PL will
         configure Alien::TALib::ConfigData to use this value as the install
         prefix of ta-lib if it is built and installed.
-
-        Setting this environment variable before calling the new() method
-        will use this as a place to look for ta-lib-config if it has been
-        installed or will install ta-lib if needed with this location as
-        prefix.
 
 SEE ALSO
     `Alien::TALib::ConfigData'

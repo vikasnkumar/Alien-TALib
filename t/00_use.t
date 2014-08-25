@@ -2,8 +2,6 @@ use Test::More;
 
 BEGIN { use_ok('Alien::TALib'); }
 
-$Alien::TALib::FORCE = 0;
-$Alien::TALib::VERBOSE = 1;
 my $alien = new_ok('Alien::TALib');
 can_ok($alien, 'cflags');
 isnt($alien->cflags, undef, "has cflags()");
@@ -12,7 +10,12 @@ can_ok($alien, 'libs');
 isnt($alien->libs, undef, "has libs()");
 note($alien->libs);
 can_ok($alien, 'is_installed');
+is($alien->is_installed, 1, " is installed");
+note($alien->is_installed);
 can_ok($alien, 'ta_lib_config');
+if (defined $alien->ta_lib_config) {
+    note($alien->ta_lib_config);
+}
 
 done_testing();
 __END__
