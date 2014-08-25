@@ -1,9 +1,52 @@
 use strict;
 use warnings;
 use Alien::Base::ModuleBuild;
+use File::Which 'which';
+use File::Spec;
 
+my $cflags = $ENV{TALIB_CFLAGS};
+my $libs = $ENV{TALIB_LIBS};
 $Alien::Base::ModuleBuild::Verbose = 1;
-$Alien::Base::ModuleBuild::Force = 1;
+my ($talibconfig) = which('ta-lib-config');
+$Alien::Base::ModuleBuild::Force = 1 unless $talibconfig;
+
+my $inc_dir = '';
+my $lib_dir = '';
+if (defined $talibconfig) {
+    # usually the ta-lib-config is in the path format /abc/bin/ta-lib-config
+    my ($vol, $dir, $file) = File::Spec->splitpath($talibconfig);
+    my @dirs = File::Spec->splitdir($dir);
+    pop @dirs if @dirs; # remove the bin/ portion from the path
+    # create the include directory and lib directory path
+    # to take care of ta-lib-config's malformed output
+    # the user may have installed ta-lib-config in a non /usr/local area.
+    $inc_dir = File::Spec->catdir(@dirs, 'include', 'ta-lib') if @dirs;
+    $lib_dir = File::Spec->catdir(@dirs, 'lib') if @dirs;
+    $inc_dir = File::Spec->catfile($vol, $inc_dir) if $inc_dir;
+    $lib_dir = File::Spec->catfile($vol, $lib_dir) if $lib_dir;
+    if (not defined $libs) {
+        $libs = `$talibconfig --libs`;
+        chomp $libs if length $libs;
+        $libs =~ s/[\s\n\r]*$// if length $libs;
+        $libs .= " -lta_lib" if length $libs && $libs !~ /-lta_lib/;
+        # fix the problem with ta-lib-config --libs giving the wrong -L path
+        $libs = "-L$lib_dir $libs" if $lib_dir;
+    }
+    if (not defined $cflags) {
+        $cflags = `$talibconfig --cflags`;
+        chomp $cflags if length $cflags;
+        $cflags =~ s/[\s\n\r]*$// if length $cflags;
+        $cflags = "-I$inc_dir $cflags" if $inc_dir;
+    }
+}
+
+if (defined $cflags and defined $libs) {
+    $Alien::Base::ModuleBuild::Force = 0;
+} else {
+    $Alien::Base::ModuleBuild::Force = 1;
+    $cflags = " -DHAVE_CONFIG_H";
+    $libs = "-lpthread -ldl -lta_lib";
+}
 
 my $build = Alien::Base::ModuleBuild->new(
     module_name => 'Alien::TALib',
@@ -11,12 +54,13 @@ my $build = Alien::Base::ModuleBuild->new(
     dist_author => 'Vikas N. Kumar <vikas@cpan.org>',
     dist_abstract => 'Alien module for ta-lib from http://ta-lib.org',
     create_readme => 0,
-    create_license => (-e 'LICENSE' ? 0 : 1),
     configure_requires => {
         'Module::Build' => 0,
         'Alien::Base' => 0,
         'Alien::Base::ModuleBuild' => 0,
         'Software::License' => 0,
+        'File::Which' => 0,
+        'File::Spec' => 0,
     },
     build_requires => {
         'Alien::Base::ModuleBuild' => 0,
@@ -46,8 +90,8 @@ my $build = Alien::Base::ModuleBuild->new(
     alien_install_commands => [
         'make install'
     ],
-    alien_provides_cflags => "-DHAVE_CONFIG_H",
-    alien_provides_libs => "-lpthread -ldl -lta_lib",
+    alien_provides_cflags => $cflags,
+    alien_provides_libs => $libs,
     alien_version_check => "ta-lib-config --version",
     meta_merge => {
         resources => {
