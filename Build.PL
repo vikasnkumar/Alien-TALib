@@ -15,7 +15,7 @@ my $VERBOSE = 0;
 sub _build_talib_src_win32 {
     my $force = shift;
     my $src_url = 'http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-msvc.zip';
-    my $datadir = $ENV{PREFIX} || File::HomeDir->my_dist_data('Alien::TALib', { create => 1 });
+    my $datadir = $ENV{PREFIX} || File::HomeDir->my_dist_data('Alien-TALib', { create => 1 });
     my $destzip = File::Spec->catfile($datadir, 'ta-lib-0.4.0-mscv.zip');
     my $destdir = File::Spec->catfile($datadir, 'ta-lib');
     if ($force) {
@@ -52,7 +52,7 @@ sub _build_talib_src_win32 {
 }
 
 sub _build_talib_src_unix {
-    my $prefix = shift || $ENV{PREFIX} || File::HomeDir->my_dist_data('Alien::TALib', { create => 1 });
+    my $prefix = shift || $ENV{PREFIX} || File::HomeDir->my_dist_data('Alien-TALib', { create => 1 });
     my $src_url = 'http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz';
     my $dest = 'ta-lib-0.4.0-src.tar.gz';
     unless (-e $dest and -e 'ta-lib') {
@@ -153,6 +153,7 @@ sub _find_ta_lib_config {
     };
 }
 
+my $needs_compiler = $^O =~ /Win32/i ? 0 : 1;
 my $build = Module::Build->new(
     module_name => 'Alien::TALib',
     license => 'perl',
@@ -160,7 +161,7 @@ my $build = Module::Build->new(
     dist_abstract => 'Alien module for ta-lib from http://ta-lib.org',
     create_readme => 1,
     create_license => (-e 'LICENSE' ? 0 : 1),
-    needs_compiler => 1,
+    needs_compiler => $needs_compiler,
     configure_requires => {
         'Module::Build' => 0,
         'Software::License' => 0,
