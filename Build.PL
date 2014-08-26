@@ -164,7 +164,6 @@ my $build = Module::Build->new(
     needs_compiler => $needs_compiler,
     configure_requires => {
         'Module::Build' => 0,
-        'Software::License' => 0,
         'File::Spec' => 0,
         'File::Which' => 0,
         'File::HomeDir' => 0,
@@ -177,7 +176,6 @@ my $build = Module::Build->new(
     build_requires => {
         'Module::Build' => 0,
         'Test::More' => 0,
-        'Software::License' => 0,
         'File::HomeDir' => 0,
         'File::Spec' => 0,
         'File::Which' => 0,
@@ -204,11 +202,10 @@ my $build = Module::Build->new(
     },
 );
 $VERBOSE = $build->verbose;
-my $installed;
-if ($^O =~ /Win32/i) {
+my $installed = &_find_ta_lib_config(); # try ta-lib-config even on MS Windows
+if ($^O =~ /Win32/i and not $installed) {
     $installed = &_build_talib_src_win32($ENV{TALIB_FORCE});
 } else {
-    $installed = &_find_ta_lib_config();
     if ($ENV{TALIB_FORCE} or not $installed) {
         # ok ta-lib was not found or build was forced
         # so build it
