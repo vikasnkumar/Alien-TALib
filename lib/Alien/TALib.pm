@@ -1,13 +1,7 @@
 package Alien::TALib;
 use strict;
 use warnings;
-use File::Which 'which';
-use File::Spec;
-use LWP::Simple qw(getstore is_success);
-use Archive::Tar;
-use Archive::Zip;
 use Alien::TALib::ConfigData;
-use Cwd ();
 
 our $VERSION = '0.06';
 $VERSION = eval $VERSION;
