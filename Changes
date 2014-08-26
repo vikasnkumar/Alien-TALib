@@ -1,3 +1,18 @@
+Tue Aug 26 11:16:12 2014 -0400
+1c180e2968809e65ab015a72d59975d7b1e8a6ac
+updating manifest and creating license to 0
+
+Tue Aug 26 11:14:46 2014 -0400
+c8b6b9c50178af0932bb3e20aaa31e07425f6ffa
+Merge pull request #2 from kmx/master
+compat with strawberry PDL edition
+Tue Aug 26 12:13:03 2014 +0200
+a95dabe90edb6dc480218a1b1c8145cfc7096962
+compat with strawberry PDL edition that comes with pre-built ta-lib binaries
+
+Mon Aug 25 16:15:23 2014 -0400
+c860d63ab04f2e7f5116ed2f1dfe74648149f363
+Releasing 0.05
 Mon Aug 25 16:13:36 2014 -0400
 6f5a834d841397faadddc940a69219766c2be315
 Updating bug in HomeDir call

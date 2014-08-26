@@ -21,7 +21,7 @@ SYNOPSIS
                 );
 
 VERSION
-    0.05
+    0.06
 
 DESCRIPTION
     Installing ta-lib on various platforms can be a hassle for the end-user.

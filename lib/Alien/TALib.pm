@@ -9,7 +9,7 @@ use Archive::Zip;
 use Alien::TALib::ConfigData;
 use Cwd ();
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 $VERSION = eval $VERSION;
 
 sub new {
@@ -63,7 +63,7 @@ C<Makefile.PL> file if you're using ExtUtils::MakeMaker.
 
 =head1 VERSION
 
-0.05
+0.06
 
 =head1 DESCRIPTION
 
