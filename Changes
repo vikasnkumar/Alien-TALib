@@ -1,3 +1,22 @@
+Tue Sep 2 12:03:13 2014 -0400
+b92beb613eed0cf9ecd224fc7e197530bdb5229f
+Releasing 0.07
+
+Tue Sep 2 11:59:53 2014 -0400
+8132b9f308dd4d54a40d8e77aa7323961c44750e
+Adding win32-64 bit support
+
+Tue Aug 26 11:52:16 2014 -0400
+6ef6abe82763137487073728fd52d55f4c3c1783
+removing unnecessary modules from the main PM file
+
+Tue Aug 26 11:17:42 2014 -0400
+fe1354f998f3717b3553815a371e92def1fd32e7
+updating changelog
+
+Tue Aug 26 11:17:14 2014 -0400
+675110dd7c3257aebd72c120fd83e8abcc3df2c5
+Releasing 0.06
 Tue Sep 2 11:59:53 2014 -0400
 8132b9f308dd4d54a40d8e77aa7323961c44750e
 Adding win32-64 bit support
