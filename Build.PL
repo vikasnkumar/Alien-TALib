@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use Config qw(%Config);
 use Module::Build;
 use File::Spec;
 use File::Which qw(which);
@@ -11,6 +12,36 @@ use Archive::Zip qw(:ERROR_CODES :CONSTANTS);
 use Cwd ();
 
 my $VERBOSE = 0;
+
+sub _get_talib_win32_x64libs {
+    my $force = shift;
+    my $src_url = 'http://github.com/vikasnkumar/vikasnkumar.github.io/raw/98f6d24bc7ef9fa84df030aa64cba48a73e2838e/files/msvc-lib64.zip';
+    my $datadir = $ENV{PREFIX} || File::HomeDir->my_dist_data('Alien-TALib', { create => 1 });
+    my $destzip = File::Spec->catfile($datadir, 'msvc-lib64.zip');
+    my $destdir = File::Spec->catfile($datadir, 'lib64');
+    if ($force) {
+        unlink $destzip if -e $destzip;
+        remove_tree ($destdir, {safe => 1 });
+    }
+    unless (-e $destzip and -e $destdir) {
+        print "Trying to download into $destzip from $src_url\n" if $VERBOSE;
+        my $rc = getstore($src_url, $destzip);
+        die "Unable to download source from $src_url into $destzip" unless is_success($rc);
+        my $cwd = Cwd::getcwd;
+        chdir $datadir;
+        my $zip = Archive::Zip->new;
+        if ($zip->read($destzip) == AZ_OK) {
+            $zip->extractTree();
+            die "Unable to successfully extract $destzip into ta-lib64" unless -e $destdir;
+        } else {
+            die "Unable to read the zip file: $destzip";
+        }
+        chdir $cwd;
+    } else {
+        print "$destzip already exists and is unarchived in ta-lib64\n" if $VERBOSE;
+    }
+    return $destdir;
+}
 
 sub _build_talib_src_win32 {
     my $force = shift;
@@ -39,8 +70,12 @@ sub _build_talib_src_win32 {
     } else {
         print "$destzip already exists and is unarchived in ta-lib\n" if $VERBOSE;
     }
+    my $lib64_dir;
+    if ($Config{archname} =~ /x64|x86_64/i) {
+        $lib64_dir = &_get_talib_win32_x64libs($force);
+    }
     # ok we have extracted nicely and let's use the pre-built libs
-    my $lib_dir = File::Spec->catdir($destdir, 'c', 'lib');
+    my $lib_dir = $lib64_dir || File::Spec->catdir($destdir, 'c', 'lib');
     my $libs = "-L$lib_dir -lta_abstract_cmr -lta_common_cmr -lta_func_cmr -lta_libc_cmr";
     my $inc_dir = File::Spec->catdir($destdir, 'c', 'include');
     my $cflags = "-I$inc_dir";
