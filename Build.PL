@@ -4,6 +4,7 @@ use Alien::Base::ModuleBuild;
 use File::Which 'which';
 use File::Spec;
 
+print $Alien::Base::ModuleBuild::VERSION, "\n";
 my $cflags = $ENV{TALIB_CFLAGS};
 my $libs = $ENV{TALIB_LIBS};
 $Alien::Base::ModuleBuild::Verbose = 1;
@@ -44,10 +45,12 @@ if (defined $talibconfig) {
 
 if (defined $cflags and defined $libs) {
     $Alien::Base::ModuleBuild::Force = 0;
+    print "Will NOT build ta-lib\n";
 } else {
     $Alien::Base::ModuleBuild::Force = 1;
     $cflags = " -DHAVE_CONFIG_H";
     $libs = "-lpthread -ldl -lta_lib";
+    print "Will build ta-lib\n";
 }
 print "Expected ta-lib cflags: $cflags\n";
 print "Expected ta-lib libs: $libs\n";
@@ -75,6 +78,7 @@ my $build = Alien::Base::ModuleBuild->new(
     requires => {
         'perl' => '5.10.0',
         'Alien::Base' => 0,
+        'Alien::MSYS' => 0,
     },
     alien_name => 'ta_lib',
     alien_repository => {
@@ -87,7 +91,7 @@ my $build = Alien::Base::ModuleBuild->new(
         sha256 => '9ff41efcb1c011a4b4b6dfc91610b06e39b1d7973ed5d4dee55029a0ac4dc651',
     },
     alien_build_commands => [
-        '%pconfigure --prefix=%s',
+        '%c --prefix=%s',
         'make',
         'make check'
     ],
