@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Alien::TALib::ConfigData;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 $VERSION = eval $VERSION;
 
 sub new {
