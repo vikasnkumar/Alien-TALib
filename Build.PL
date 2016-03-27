@@ -228,6 +228,7 @@ my $build = Module::Build->new(
         'Archive::Tar' => 0,
         'Archive::Zip' => 0,
         'Cwd' => 0,
+        'perl' => 5.006,
     },
     meta_merge => {
         resources => {

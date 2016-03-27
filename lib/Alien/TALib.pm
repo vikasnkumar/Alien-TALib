@@ -33,7 +33,7 @@ __END__
 
 =head1 NAME
 
-Alien::TALib
+Alien::TALib - Perl extension to install TA-lib
 
 =head1 SYNOPSIS
 
