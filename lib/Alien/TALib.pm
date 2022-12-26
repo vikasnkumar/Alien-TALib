@@ -6,12 +6,6 @@ use parent 'Alien::Base';
 our $VERSION = '0.10';
 $VERSION = eval $VERSION;
 
-sub libs {
-    if ($^O ne 'Win32') {
-        return '-lta_lib -lm';
-    }
-}
-
 1;
 
 __END__
@@ -29,9 +23,9 @@ Alien::TALib
 
 Alien::TALib is a perl module that enables the installation of the technical
 analysis library TA-lib from "L<http://ta-lib.org>" on the system and easy
-access by other perl modules in the methodology cited by Alien::Base.
+access by other perl modules in the methodology cited by C<Alien::Base>.
 
-You can use it in the C<Build.PL> file if you're using Module::Build or
+You can use it in the C<Build.PL> file if you're using C<Module::Build> or
 C<Makefile.PL> file if you're using ExtUtils::MakeMaker.
 
             my $talib = Alien::TALib->new;
@@ -50,8 +44,9 @@ C<Makefile.PL> file if you're using ExtUtils::MakeMaker.
 
 =head1 WARNING
 
-This module is not supported on Windows unless running under Cygwin. We are
-working to fix this soon.
+This module is not supported on Windows unless running under Cygwin or MSYS.
+
+We are working to fix this soon.
 
 =head1 METHODS
 
@@ -65,19 +60,17 @@ This method provides the compiler flags needed to use the library on the system.
 
 This method provides the linker flags needed to use the library on the system.
 
-=item B<config>
-
-This method provides the access to configuration information for the library on
-the system. More information can be seen in the module
-L<Alien::TALib::ConfigData>.
-
 =back
 
 =head1 SEE ALSO
 
 =over
 
-=item C<Alien::TALib::ConfigData>
+=item C<Alien::Base>
+
+=item C<Alien::Build>
+
+=item C<PDL::Finance::TA>
 
 =back
 
