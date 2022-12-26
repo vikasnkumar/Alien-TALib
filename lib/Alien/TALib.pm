@@ -1,11 +1,16 @@
 package Alien::TALib;
 use strict;
 use warnings;
+use parent 'Alien::Base';
 
-our $VERSION = '0.04';
+our $VERSION = '0.10';
 $VERSION = eval $VERSION;
 
-use parent 'Alien::Base';
+sub libs {
+    if ($^O ne 'Win32') {
+        return '-lta_lib -lm';
+    }
+}
 
 1;
 
@@ -13,6 +18,7 @@ __END__
 #### COPYRIGHT: Vikas N Kumar. All Rights Reserved
 #### AUTHOR: Vikas N Kumar <vikas@cpan.org>
 #### DATE: 17th Dec 2013
+#### DATE: 26th Dec 2022
 #### LICENSE: Refer LICENSE file.
 
 =head1 NAME
@@ -40,7 +46,7 @@ C<Makefile.PL> file if you're using ExtUtils::MakeMaker.
 
 =head1 VERSION
 
-0.04
+0.10
 
 =head1 WARNING
 
@@ -85,7 +91,7 @@ L<https://github.com/vikasnkumar/Alien-TALib.git>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2013-2014. Vikas N Kumar <vikas@cpan.org>. All Rights Reserved.
+Copyright (C) 2013-2022. Vikas N Kumar <vikas@cpan.org>. All Rights Reserved.
 
 =head1 LICENSE
 

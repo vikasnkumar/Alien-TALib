@@ -75,7 +75,10 @@
 \bTAGS$
 \btodo$
 \bTODO$
+\b_build
 \b_alien
 \b_share
 \b_installer
-
+\.zip$
+\.tar\.gz$
+\.tgz$

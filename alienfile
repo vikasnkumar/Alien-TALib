@@ -1,0 +1,34 @@
+use alienfile;
+
+### let's probe by compiling the code
+plugin 'Probe::CBuilder' => (
+    program => q\
+#include <ta-lib/ta_libc.h>
+int main(int argc, char **argv)
+{
+  TA_Initialize();
+  TA_Shutdown();
+  return 0;
+}
+\,
+    lang => 'C',
+    cflags => $ENV{TALIB_INCLUDES} ? "-I$ENV{TALIB_INCLUDES}": "",
+    libs => $ENV{TALIB_LIBDIRS} ? "-L$ENV{TALIB_LIBDIRS} -lta_lib -lm" : "-lta_lib -lm",
+);
+
+share {
+    start_url 'https://sourceforge.net/code-snapshots/svn/t/ta/ta-lib/code/ta-lib-code-r1562-trunk.zip';
+    plugin 'Download';
+    plugin 'Extract' => 'zip';
+    plugin 'Build::CMake';
+    build [
+        # this is the default build step, if you do not specify one.
+        [ '%{cmake}',
+            @{ meta->prop->{plugin_build_cmake}->{args} },
+            # ... put extra cmake args here ...
+            '%{.install.extract}/ta-lib/'
+        ],
+        '%{make}',
+        '%{make} install',
+    ];
+};
