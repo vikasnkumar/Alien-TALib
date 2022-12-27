@@ -20,6 +20,7 @@ my $build = Alien::Build::MB->new(
         'Module::Build' => 0,
         'Software::License' => 0,
         'Path::Tiny' => 0,
+        'HTTP::Tiny' => 0,
     },
     requires => {
         'perl' => '5.10.0',
