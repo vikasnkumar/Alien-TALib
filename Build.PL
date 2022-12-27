@@ -19,16 +19,10 @@ my $build = Alien::Build::MB->new(
         'Test::More' => 0,
         'Module::Build' => 0,
         'Software::License' => 0,
-        'Alien::cmake3' => 0,
         'Path::Tiny' => 0,
-        'Alien::MSYS' => 0,
-        'Mozilla::CA' => 0,
     },
     requires => {
         'perl' => '5.10.0',
-        'Alien::Build::MB' => 0,
-        'Alien::cmake3' => 0,
-        'Alien::MSYS' => 0,
     },
     meta_merge => {
         resources => {

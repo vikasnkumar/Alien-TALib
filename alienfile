@@ -22,7 +22,6 @@ share {
     start_url 'https://sourceforge.net/code-snapshots/svn/t/ta/ta-lib/code/ta-lib-code-r1562-trunk.zip';
     plugin 'Download';
     plugin 'Extract' => 'zip';
-    plugin 'Build::MSYS';
     plugin 'Build::CMake';
     build [
         # this is the default build step, if you do not specify one.
