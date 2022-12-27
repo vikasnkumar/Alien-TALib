@@ -82,3 +82,6 @@
 \.zip$
 \.tar\.gz$
 \.tgz$
+
+# Avoid GitHub CI workflow
+\B\.github/workflows\b
