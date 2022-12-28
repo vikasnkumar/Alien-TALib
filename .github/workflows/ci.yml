@@ -133,6 +133,7 @@ jobs:
       - name: Install Perl deps
         run: |
           cpanm --notest --installdeps .
+          cpanm --notest FFI::Platypus
 
       - name: Install share install deps before setting ALIEN_INSTALL_TYPE
         if: matrix.alien-install-type == 'share'
