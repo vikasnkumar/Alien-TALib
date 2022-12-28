@@ -72,5 +72,7 @@ share {
         $build->runtime_prop->{cflags} = "-I$include";
         $build->runtime_prop->{libs} = "-L$dynamic -lta_lib -lm";
         $build->runtime_prop->{libs_static} = "-L$lib -lta_lib -lm";
+
+        $build->runtime_prop->{inline_auto_include} = [ 'ta_libc.h' ];
     };
 };
