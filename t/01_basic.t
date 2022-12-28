@@ -31,10 +31,14 @@ xs_ok $xs, with_subtest {
   like $module->version, $version_re, 'version string';
 };
 
-ffi_ok { symbols => ['TA_GetVersionString'] }, with_subtest {
-  my $ffi = shift;
-  my $get_version = $ffi->function(TA_GetVersionString => [] => 'string');
-  like $get_version->call(), $version_re, 'version string';
+subtest "FFI" => sub {
+  plan skip_all => 'Upstream library currently does not support DLL export for FFI'
+    if $^O eq 'MSWin32';
+  ffi_ok { symbols => ['TA_GetVersionString'] }, with_subtest {
+    my $ffi = shift;
+    my $get_version = $ffi->function(TA_GetVersionString => [] => 'string');
+    like $get_version->call(), $version_re, 'version string';
+  };
 };
 
 done_testing;
