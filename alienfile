@@ -68,7 +68,7 @@ share {
 
         my $lib = $prefix->child('lib')->stringify;
         my $include = $prefix->child('include', 'ta-lib');
-        my $dynamic = $prefix->child('lib', 'dynamic');
+        my $dynamic = $prefix->child('dynamic');
         $build->runtime_prop->{cflags} = "-I$include";
         $build->runtime_prop->{libs} = "-L$dynamic -lta_lib -lm";
         $build->runtime_prop->{libs_static} = "-L$lib -lta_lib -lm";
