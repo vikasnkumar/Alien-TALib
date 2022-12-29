@@ -34,7 +34,11 @@ share {
                 content => 'path=%2Ftrunk',
             },
         );
-        die 'Could not request snapshot' unless $response->{success};
+        unless ($response->{success}) {
+            print "HTTP Response: " . $response->{status} .
+                  " Reason: " . $response->{reason} . "\n";
+            die "Could not request snapshot from $response->{url}";
+        }
         sleep 4; # wait a bit
     });
     plugin 'Extract' => 'zip';
