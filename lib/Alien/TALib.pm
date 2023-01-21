@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use parent 'Alien::Base';
 
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 $VERSION = eval $VERSION;
 
 1;
@@ -40,7 +40,7 @@ C<Makefile.PL> file if you're using ExtUtils::MakeMaker.
 
 =head1 VERSION
 
-0.13
+0.14
 
 =head1 WARNING
 
