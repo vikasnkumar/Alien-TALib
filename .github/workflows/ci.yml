@@ -112,6 +112,11 @@ jobs:
         run: |
           pacman -S --needed --noconfirm ${{ env.PKG_MSYS2_MINGW64 }}
 
+      - name: Setup homebrew deps
+        if: runner.os == 'macOS'
+        run: |
+          brew install libffi
+
       # Setup Perl
       - name: Set up perl
         uses: shogo82148/actions-setup-perl@v1
