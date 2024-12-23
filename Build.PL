@@ -12,6 +12,8 @@ my $build = Alien::Build::MB->new(
         'Module::Build' => 0,
         'Alien::Build' => 0,
         'Alien::Build::MB' => 0,
+        'Alien::Build::Plugin::Download::GitHub' => 0,
+        'Software::License' => 0,
     },
     build_requires => {
         'Alien::Build::MB' => 0,
@@ -46,6 +48,10 @@ my $build = Alien::Build::MB->new(
             develop => {
                 requires => {
                     'Software::License' => 0,
+                    'Alien::Build' => 0,
+                    'Module::Build' => 0,
+                    'Alien::Build::MB' => 0,
+                    'Alien::Build::Plugin::Download::GitHub' => 0,
                 },
             },
         },
