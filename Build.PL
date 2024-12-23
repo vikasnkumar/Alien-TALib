@@ -18,6 +18,7 @@ my $build = Alien::Build::MB->new(
         'Module::Build' => 0,
         'Path::Tiny' => 0,
         'HTTP::Tiny' => 0,
+        'Alien::Build::Plugin::Download::GitHub' => 0,
     },
     test_requires => {
         'Test::More'        => 0,

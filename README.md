@@ -23,7 +23,7 @@ SYNOPSIS
 
 VERSION
 
-    0.16
+    0.17
 
 WARNING
 
