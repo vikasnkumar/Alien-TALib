@@ -54,7 +54,7 @@ jobs:
           perl ./Build distdir
           mv ./Alien-TALib-* ./build-dir
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: dist
           path: ./build-dir
@@ -74,7 +74,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        perl-version: ['5.10', '5.20', '5.30', '5.34']
+        perl-version: ['5.16', '5.20', '5.30', '5.34']
         alien-install-type: [ 'share' ]
         include:
           # Windows strawberry     | share

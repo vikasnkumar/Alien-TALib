@@ -27,15 +27,20 @@ my $build = Alien::Build::MB->new(
         'Test::Alien::Diag' => 0,
     },
     requires => {
-        'perl' => '5.10.0',
+        'perl' => '5.16.0',
     },
     meta_merge => {
         'meta-spec' => {
             version => 2
         },
         resources => {
-            repository => "https://github.com/vikasnkumar/Alien-TALib",
-            bugtracker => "https://github.com/vikasnkumar/Alien-TALib/issues",
+            repository => {
+                url => 'git://github.com/vikasnkumar/Alien-TALib',
+                type => 'git',
+                web => 'https://github.com/vikasnkumar/Alien-TALib',
+            },
+            x_IRC => 'irc://irc.perl.org/#pdl',
+            bugtracker => { web => "https://github.com/vikasnkumar/Alien-TALib/issues" },
         },
         prereqs => {
             develop => {
