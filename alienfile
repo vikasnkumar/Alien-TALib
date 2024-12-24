@@ -8,10 +8,10 @@ use Path::Tiny qw(path);
 if ($^O !~ /freebsd|openbsd|netbsd/i) {
 plugin 'Probe::CBuilder' => (
     lang => 'C',
-    cflags => $ENV{TALIB_INCLUDES} ? "-I$ENV{TALIB_INCLUDES}": "",
+    cflags => $ENV{TALIB_INCLUDES} ? "-I$ENV{TALIB_INCLUDES} -I$ENV{TALIB_INCLUDES}/ta-lib": "",
     libs => $ENV{TALIB_LIBDIRS} ? "-L$ENV{TALIB_LIBDIRS} -lta-lib -lm" : "-lta-lib -lm",
     program => <<'EOF');
-#include <ta-lib/ta_libc.h>
+#include <ta_libc.h>
 int main(int argc, char **argv)
 {
   TA_Initialize();
