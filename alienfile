@@ -3,6 +3,8 @@ use warnings;
 use alienfile;
 use Path::Tiny qw(path);
 
+plugin PkgConfig => 'ta-lib';
+plugin 'Probe::Vcpkg' => 'talib';
 ### let's probe by compiling the code. on FreeBSD force the download and build
 ### the latest code since the pkg version is old
 if ($^O !~ /freebsd|openbsd|netbsd/i) {

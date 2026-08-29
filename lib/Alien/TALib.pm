@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use parent 'Alien::Base';
 
-our $VERSION = '0.18';
+our $VERSION = '0.19';
 $VERSION = eval $VERSION;
 
 1;
